@@ -14,23 +14,23 @@ let data;
 let delay;
 let step;
 let amount;
-let timeoutID = null;
 refs.button.addEventListener('click', onSubmitBtnClick);
 refs.form.addEventListener('input', onMessageInput);
 
 function onSubmitBtnClick(event) {
   event.preventDefault();
-  for (const i = 0; i < data.amount; i++) {
-    createPromise(2, data.delay)
-    .then(({ position, delay }) => {
-      Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-    })
-    .catch(({ position, delay }) => {
-      Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-    });
+  for (const i = 0; i <= 3; i++) {
+    setTimeout(function onDelay() {
+      const shouldResolve = Math.random() > 0.3;
+            if (shouldResolve) {
+            Notiflix.Notify.success(`✅ Fulfilled promise`);
+          } else {
+            Notiflix.Notify.failure(`❌ Rejected promise`);
+          }
+      setTimeout(onDelay, 1000);
+    }, 2000);
+  }
 }
-}
-
 function createDataObject (delay, step, amount) {
   const valueObject = {
     delay,
@@ -51,19 +51,11 @@ function onMessageInput (event) {
   }
   data = createDataObject(delay, step, amount);
 };
-function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  timeoutID = setTimeout(() => {
-     new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(delay);
-      }, delay);
-      if (shouldResolve) {
-        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-      } else {
-        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-      }
-    });
-  });
-  return timeoutID;
-  }
+
+// function onDelay (ms) {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve(ms);
+//     }, ms);
+//   });
+// };
