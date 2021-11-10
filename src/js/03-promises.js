@@ -7,64 +7,63 @@ const refs = {
   step: document.querySelector('input[name="step"]'),
   amount: document.querySelector('input[name="amount"]'),
   button: document.querySelector('button'),
-}
-// let position = 0;
-
-// refs.button.addEventListener('click', onSubmitBtnClick);
-
-function onSubmitBtnClick() {
-
+  form: document.querySelector('form'),
 }
 
+let data;
+let delay;
+let step;
+let amount;
+let timeoutID = null;
+refs.button.addEventListener('click', onSubmitBtnClick);
+refs.form.addEventListener('input', onMessageInput);
+
+function onSubmitBtnClick(event) {
+  event.preventDefault();
+  for (const i = 0; i < data.amount; i++) {
+    createPromise(2, data.delay)
+    .then(({ position, delay }) => {
+      Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+    })
+    .catch(({ position, delay }) => {
+      Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+    });
+}
+}
+
+function createDataObject (delay, step, amount) {
   const valueObject = {
     delay,
     step,
     amount
   };
-
-console.log(createDataObject())
-let position = 1;
-
-setTimeout(function createPromise(position, delay) {
-  position++;
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  } else {
-    Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+  return valueObject;
+}
+function onMessageInput (event) {
+  if(event.target.name === "delay"){
+    delay = event.target.value;
   }
-  setTimeout(createPromise, 1000);
-}, 1000)
-//   createPromise(3, 1500)
-//   .then(({ position, delay }) => {
-//     Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-//   });
-// }
-
-//   if(valueObject.delay == "" || valueObject.step == "" || valueObject.amount == "" ){
-//     alert('pfgjdysvcnm gjkz')
-//   }
-//   return valueObject;
-// }
-
-// function createPromise(position, delay) {
-//   const shouldResolve = Math.random() > 0.3;
-//   setTimeout(() => {
-//     return new Promise((resolve) => {
-//       setTimeout(() => {
-//         resolve(delay);
-//       }, delay);
-//       if (shouldResolve) {
-//         Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//       } else {
-//         Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-//       }
-//     });
-//   });
-//   }
-  
-
-
+  if(event.target.name === "step"){
+    step = event.target.value;
+  }
+  if(event.target.name === "amount"){
+    amount = event.target.value;
+  }
+  data = createDataObject(delay, step, amount);
+};
+function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
+  timeoutID = setTimeout(() => {
+     new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(delay);
+      }, delay);
+      if (shouldResolve) {
+        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+      } else {
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+      }
+    });
+  });
+  return timeoutID;
+  }
