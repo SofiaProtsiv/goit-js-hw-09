@@ -14,23 +14,23 @@ let data;
 let delay;
 let step;
 let amount;
+let counter;
 refs.button.addEventListener('click', onSubmitBtnClick);
 refs.form.addEventListener('input', onMessageInput);
 
 function onSubmitBtnClick(event) {
-  event.preventDefault();
-  for (const i = 0; i <= 3; i++) {
     setTimeout(function onDelay() {
+      counter += 1;
       const shouldResolve = Math.random() > 0.3;
-            if (shouldResolve) {
-            Notiflix.Notify.success(`✅ Fulfilled promise`);
-          } else {
-            Notiflix.Notify.failure(`❌ Rejected promise`);
-          }
-      setTimeout(onDelay, 1000);
-    }, 2000);
-  }
+        if (shouldResolve) {
+          Notiflix.Notify.success(`✅ Fulfilled promise ${counter} in ${data.delay}ms`);
+        } else {
+          Notiflix.Notify.failure(`❌ Rejected promise ${counter} in ${data.delay}ms`);
+        }
+      setTimeout(onDelay, data.step);
+    }, data.delay);
 }
+
 function createDataObject (delay, step, amount) {
   const valueObject = {
     delay,
@@ -52,10 +52,4 @@ function onMessageInput (event) {
   data = createDataObject(delay, step, amount);
 };
 
-// function onDelay (ms) {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve(ms);
-//     }, ms);
-//   });
-// };
+
