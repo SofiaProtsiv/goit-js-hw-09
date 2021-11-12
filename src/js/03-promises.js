@@ -3,27 +3,17 @@
 import Notiflix from 'notiflix';
 import "notiflix/dist/notiflix-3.2.1.min.css";
 
-const refs = {
-  delay: document.querySelector('input[name="delay"]'),
-  step: document.querySelector('input[name="step"]'),
-  amount: document.querySelector('input[name="amount"]'),
-  button: document.querySelector('button'),
-  form: document.querySelector('form'),
-}
-
-let data;
-let delay;
-let step;
-let amount;
-refs.button.addEventListener('click', onSubmitBtnClick);
-refs.form.addEventListener('input', onInput);
+const form = document.querySelector('form')
+form.addEventListener('submit', onSubmitBtnClick);
 
 function onSubmitBtnClick(event) {
   event.preventDefault();  
 
-  let delay = parseInt(data.delay);
-  const step = parseInt(data.step);
-  const amount = data.amount;
+  const formElements = event.currentTarget.elements;  
+
+  let delay = parseInt(formElements.delay.value);
+  const step = parseInt(formElements.step.value);
+  const amount = parseInt(formElements.amount.value);
 
   for (let position = 1; position <= amount; position += 1) {   
 
@@ -32,34 +22,9 @@ function onSubmitBtnClick(event) {
       .catch(error => Notiflix.Notify.failure(error));
     
     delay += step;    
-    }  
-  }
-
-function createDataObject (delay, step, amount) {
-  const valueObject = {
-    delay,
-    step,
-    amount
-  };
-  return valueObject;
+  }  
+    form.reset();
 }
-function onInput (event) {
-  if(event.target.name === "delay"){
-    delay = event.target.value;
-  }
-  if(event.target.name === "step"){
-    step = event.target.value;
-  }
-  if(event.target.name === "amount"){
-    amount = event.target.value;
-  }
-
-  if (refs.delay.value.length >= 1 && refs.step.value.length >= 1 && refs.amount.value.length >= 1) {
-    refs.button.removeAttribute('disabled');
-  }
-
-  data = createDataObject(delay, step, amount);
-};
 
 function createPromise(position, delay) {  
   const shouldResolve = Math.random() > 0.3;
